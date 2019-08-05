@@ -88,19 +88,20 @@ def computingNonBasicReducedCost(c, AB, invB, A, n, CB):
     for w in range(n):
         cBarra.append([0])
     transposedCB = np.transpose(CB)
+    teste = []
+    for q in AB:
+        teste.append(q)
     for y in range(n):
         for z in AB:
-            if (y+1 == z):
+            if (y+1 in teste):
                 cBarra[y][0] = 0
                 break
             else:
                 Aj = []
-                for z in range(len(AB)):
+                for p in range(len(AB)):
                     Aj.append([0])
-
-                for z in range(len(AB)):
-                    Aj[z][0] = A[z][y]
-
+                for v in range(len(AB)):
+                    Aj[v][0] = A[v][y]
                 ctrl = np.dot(transposedCB, invB)
                 ctrl = ctrl[0]
                 ctrl = np.dot(ctrl, Aj)
@@ -157,11 +158,11 @@ def updateValues(AB, B, y, IVNBCRN, theta, A, m):
 
 
     return [ctrlAB, ctrlB]
+print('==============START===================')
 
 run = True
 
 B = []
-'2 1 1 0 0; 1 1 0 1 0; 1 0 0 0 1'
 
 A = [[2.0, 1.0, 1.0, 0, 0],
      [1.0, 1.0, 0, 1.0, 0],
@@ -201,6 +202,10 @@ cBarraCounter = 0
 dCounter = 0
 
 while(run == True):
+    print('Vector B \/\n')
+    print(B)
+    print('AB \/\n')
+    print(AB)
 
     invB = (inv(B)).astype(float)  # astype os valores para float
 
@@ -220,6 +225,8 @@ while(run == True):
 
 
     IVNBCRN = choosingJValue(cBarra) #Índice da Variável Não Básica com Custo Reduzido Negativo
+    print('IVNBCRN = ')
+    print(IVNBCRN)
 
     d = computingDVector(invB, A, IVNBCRN, AB, n)
 
@@ -242,12 +249,9 @@ while(run == True):
     B = upV[1]
     AB = upV[0]
 
-    print('Vector x \/\n')
-    print(x)
     print('cBarra \/\n')
     print(cBarra)
-    print('AB \/\n')
-    print(AB)
+    print(d)
     print('========FIM DA ITERAÇÃO========')
 
 print('===================')
