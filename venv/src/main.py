@@ -44,6 +44,7 @@ def computingDVector(invB, A, IVNBCRN, AB, n):
 
     for z in range(len(AB)):
         Aj[z][0] = A[z][IVNBCRN-1]
+    #print('Aj = {}'.format(Aj))
 
     #Segurando os valores de db \/
 
@@ -51,25 +52,23 @@ def computingDVector(invB, A, IVNBCRN, AB, n):
 
     invB = np.dot(invB, -1)
     db = np.dot(invB, Aj)
-
+    #print('db = {}'.format(db))
 
     d = []
     for w in range(n):
         d.append([0])
 
     counter = 0
-    for y in range(n):
-        for a in AB:
-            if (y+1 == a):
-                d[y][0] = db[counter][0]
-                counter = counter + 1
-                break
-            if (y+1 == IVNBCRN):
-                d[y][0] = 1
-                break
-            else:
-                d[y][0] = 0
+    #AB.sort()
 
+    d = []
+    for o in range (n):
+        d.append([0])
+    print('d = {}'.format(d))
+    for y in AB:
+        d[y-1][0] = db[counter][0]
+        counter = counter + 1
+    d[IVNBCRN-1][0] = 1
     return d
 
 def buildingVectorCB(c, AB): #Construindo vetor custo dos índices da base
@@ -123,8 +122,11 @@ def calculatingTheta(x, d, AB):
     theta = []
     ver = False
     for y in AB:
+        print('d[ {} ][0] = {}'.format(y, d[y-1][0]))
         if ((d[y-1][0] < 0)):
             ctrl = -1*(x[y-1][0])/d[y-1][0]
+            #print('theta{} = {} '.format(y, ctrl))
+            #print()
             if (ver == False):
                 theta.append(ctrl)
                 theta.append(y)
@@ -204,11 +206,12 @@ dCounter = 0
 while(run == True):
     print('Vector B \/\n')
     print(B)
-    print('AB \/\n')
-    print(AB)
+    print('Vetor AB = {}'.format(AB))
+    #print('AB \/\n')
+    #print(AB)
 
-    invB = (inv(B)).astype(float)  # astype os valores para float
-
+    invB = np.linalg.inv(B)  # astype os valores para float
+    print('invB = {}'.format(invB))
     XB = np.dot(invB, b)  # Calcula o XB (Xís da base)
 
     CB = buildingVectorCB(c, AB)  # Vetor custo com os índices da base
@@ -225,10 +228,13 @@ while(run == True):
 
 
     IVNBCRN = choosingJValue(cBarra) #Índice da Variável Não Básica com Custo Reduzido Negativo
-    print('IVNBCRN = ')
-    print(IVNBCRN)
+    print('j = {}'.format(IVNBCRN))
+
+
+
 
     d = computingDVector(invB, A, IVNBCRN, AB, n)
+    print('d = {}'.format(d))
 
     for p in d:
         if(p[0]<0):
@@ -241,17 +247,19 @@ while(run == True):
     theta = calculatingTheta(x,d,AB) #Vetor com o primeiro valor sendo o theta ótimo e o segundo o L
 
     y = calculatingVectorY(x,theta,d,n)
-
     x = y
 
     upV = updateValues(AB, B, y, IVNBCRN, theta, A, m)
 
     B = upV[1]
     AB = upV[0]
+    #AB.sort()
 
     print('cBarra \/\n')
     print(cBarra)
-    print(d)
+    print('theta = ')
+    print(theta)
+    print('vetor x = {}'.format(x))
     print('========FIM DA ITERAÇÃO========')
 
 print('===================')
