@@ -1,10 +1,12 @@
+#Simplex (Programação Linear)
 #
-#
+#Albert e Yuri
 #
 #
 
 import numpy as np
 from numpy.linalg import inv
+import random
 
 def buidlingMatrixB(m, AB, A):
     ctrl = []
@@ -44,7 +46,6 @@ def computingDVector(invB, A, IVNBCRN, AB, n):
 
     for z in range(len(AB)):
         Aj[z][0] = A[z][IVNBCRN-1]
-    #print('Aj = {}'.format(Aj))
 
     #Segurando os valores de db \/
 
@@ -52,19 +53,16 @@ def computingDVector(invB, A, IVNBCRN, AB, n):
 
     invB = np.dot(invB, -1)
     db = np.dot(invB, Aj)
-    #print('db = {}'.format(db))
 
     d = []
     for w in range(n):
         d.append([0])
 
     counter = 0
-    #AB.sort()
 
     d = []
     for o in range (n):
         d.append([0])
-    print('d = {}'.format(d))
     for y in AB:
         d[y-1][0] = db[counter][0]
         counter = counter + 1
@@ -122,11 +120,8 @@ def calculatingTheta(x, d, AB):
     theta = []
     ver = False
     for y in AB:
-        print('d[ {} ][0] = {}'.format(y, d[y-1][0]))
         if ((d[y-1][0] < 0)):
             ctrl = -1*(x[y-1][0])/d[y-1][0]
-            #print('theta{} = {} '.format(y, ctrl))
-            #print()
             if (ver == False):
                 theta.append(ctrl)
                 theta.append(y)
@@ -160,19 +155,25 @@ def updateValues(AB, B, y, IVNBCRN, theta, A, m):
 
 
     return [ctrlAB, ctrlB]
-print('==============START===================')
+
+def computingAB(n, m): #Escolhe os índices da base
+    ctrl = []
+    i = 0
+    for k in range(m):
+        while(True):
+            i = random.randint(1, n)
+            if (i not in ctrl):
+                ctrl.append(i)
+                break
+    return ctrl
 
 run = True
 
 B = []
-
+'''''''''
 A = [[2.0, 1.0, 1.0, 0, 0],
      [1.0, 1.0, 0, 1.0, 0],
      [1.0, 0, 0, 0, 1.0]]
-
-m = len(A) #Número de restrições
-#n = len(x) #Número de variáveis
-n = 5
 
 c = [[-3],
      [-2],
@@ -183,9 +184,27 @@ c = [[-3],
 b = [[100],
      [80],
      [40]] #vetor b
+'''''
 
+A = [[1.0, 2.0, 2.0, 1.0, 0.0, 0.0],
+     [2.0, 1.0, 2.0, 0.0, 1.0, 0.0],
+     [2.0, 2.0, 1.0, 0.0, 0.0, 1.0]]
 
-AB = [3, 4, 5] #Índices das colunas/variáveis básicas
+c = [[-10],
+     [-12],
+     [-12],
+     [0],
+     [0]] #vetor C
+
+b = [[20],
+     [20],
+     [20]] #vetor b
+
+m = len(A) #Número de restrições
+n = len(c) #Número de variáveis
+
+AB = computingAB(n, m)
+AB.sort()
 
 #LEMBRAR DE DAR SORT NO VETOR AB
 
@@ -194,9 +213,9 @@ AB = [3, 4, 5] #Índices das colunas/variáveis básicas
 
 B = buidlingMatrixB(m, AB, A)
 
-invB = (inv(B)).astype(float)  # astype os valores para float
+invBI = np.linalg.inv(B)  #Computando a inversa da matriz B pela primeira vez
 
-XB = np.dot(invB, b)  # Calcula o XB (Xís da base)
+XB = np.dot(invBI, b)  # Calcula o XB (Xís da base)
 
 x = buildingInitialVectorX(n, XB, AB) #Base inicial
 
@@ -204,14 +223,8 @@ cBarraCounter = 0
 dCounter = 0
 
 while(run == True):
-    print('Vector B \/\n')
-    print(B)
-    print('Vetor AB = {}'.format(AB))
-    #print('AB \/\n')
-    #print(AB)
 
     invB = np.linalg.inv(B)  # astype os valores para float
-    print('invB = {}'.format(invB))
     XB = np.dot(invB, b)  # Calcula o XB (Xís da base)
 
     CB = buildingVectorCB(c, AB)  # Vetor custo com os índices da base
@@ -226,15 +239,10 @@ while(run == True):
         break
     cBarraCounter = 0
 
-
     IVNBCRN = choosingJValue(cBarra) #Índice da Variável Não Básica com Custo Reduzido Negativo
-    print('j = {}'.format(IVNBCRN))
-
-
-
 
     d = computingDVector(invB, A, IVNBCRN, AB, n)
-    print('d = {}'.format(d))
+
 
     for p in d:
         if(p[0]<0):
@@ -253,15 +261,9 @@ while(run == True):
 
     B = upV[1]
     AB = upV[0]
-    #AB.sort()
 
-    print('cBarra \/\n')
-    print(cBarra)
-    print('theta = ')
-    print(theta)
-    print('vetor x = {}'.format(x))
-    print('========FIM DA ITERAÇÃO========')
+print('Vetor x -> {}'.format(x))
 
-print('===================')
-print(x)
-
+transposeC = np.transpose(c)
+custoOtimo = np.dot(transposeC, x)
+print('custoOtimo = {}'.format(custoOtimo[0]))
