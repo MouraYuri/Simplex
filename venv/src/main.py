@@ -8,6 +8,12 @@ import numpy as np
 from numpy.linalg import inv
 import random
 
+def createMatrix(d):
+	m = []
+	for x in range(d):
+		m.append([0])
+	return m
+
 def buidlingMatrixB(m, AB, A):
     ctrl = []
     B = []
@@ -20,14 +26,20 @@ def buidlingMatrixB(m, AB, A):
     return B
 
 def buildingInitialVectorX(n, XB, AB):
-    ctrl = []
-    for z in range(n):
-        ctrl.append([0])
+    ctrl = createMatrix(n)
+
+    #for z in range(n):
+    #    ctrl.append([0])
 
     counter = 0
-    for q in AB:
-        ctrl[q-1][0] = XB[counter][0]
-        counter = counter + 1
+    for y in range(n):
+        for q in AB:
+            if (y+1 == q):
+                ctrl[y][0] = XB[counter][0]
+                counter = counter + 1
+                break
+            else:
+                ctrl[y][0] = 0
     return ctrl
 
 def computingDVector(invB, A, IVNBCRN, AB, n):
@@ -35,9 +47,9 @@ def computingDVector(invB, A, IVNBCRN, AB, n):
     #db = -B^-1*Aj
 
     #Segurando os valores de Aj \/
-    Aj = []
-    for z in range(len(AB)):
-        Aj.append([0])
+    Aj = createMatrix(len(AB))
+    #for z in range(len(AB)):
+    #    Aj.append([0])
 
     for z in range(len(AB)):
         Aj[z][0] = A[z][IVNBCRN-1]
@@ -49,15 +61,15 @@ def computingDVector(invB, A, IVNBCRN, AB, n):
     invB = np.dot(invB, -1)
     db = np.dot(invB, Aj)
 
-    d = []
-    for w in range(n):
-        d.append([0])
+    d = creatMatrix(n)
+    #for w in range(n):
+    #    d.append([0])
 
     counter = 0
 
-    d = []
-    for o in range (n):
-        d.append([0])
+    #d = []
+    #for o in range (n):
+    #    d.append([0])
     for y in AB:
         d[y-1][0] = db[counter][0]
         counter = counter + 1
@@ -65,9 +77,9 @@ def computingDVector(invB, A, IVNBCRN, AB, n):
     return d
 
 def buildingVectorCB(c, AB): #Construindo vetor custo dos índices da base
-    CB = []
-    for z in range(len(AB)):
-        CB.append([0])
+    CB = createMatrix(len(AB))
+    #for z in range(len(AB)):
+    #    CB.append([0])
     counter = 0
     for y in AB:
         CB[counter][0] = c[y-1][0]
@@ -76,9 +88,9 @@ def buildingVectorCB(c, AB): #Construindo vetor custo dos índices da base
     return CB
 
 def computingNonBasicReducedCost(c, AB, invB, A, n, CB):
-    cBarra = []
-    for w in range(n):
-        cBarra.append([0])
+    cBarra = createMatrix(n)
+    #for w in range(n):
+    #    cBarra.append([0])
     transposedCB = np.transpose(CB)
     teste = []
     for q in AB:
@@ -165,8 +177,7 @@ def computingAB(n, m): #Escolhe os índices da base
 run = True
 
 B = []
-
-'''''
+'''''''''
 A = [[2.0, 1.0, 1.0, 0, 0],
      [1.0, 1.0, 0, 1.0, 0],
      [1.0, 0, 0, 0, 1.0]]
@@ -180,11 +191,7 @@ c = [[-3],
 b = [[100],
      [80],
      [40]] #vetor b
-m = len(A)
-n = len(c)
-'''''''''
-
-
+'''''
 
 m = int(input('Entre com o número de restrições: '))
 n = int(input('Entre com o número de variáveis: '))
@@ -209,7 +216,6 @@ for o in range(m):
 for o in range(m):
     b[o][0] = float(input('Entre com o valor de b no índice [{}]: '.format(o)))
 
-
 '''''''''
 A = [[1.0, 2.0, 2.0, 1.0, 0.0, 0.0],
      [2.0, 1.0, 2.0, 0.0, 1.0, 0.0],
@@ -224,12 +230,9 @@ c = [[-10],
 b = [[20],
      [20],
      [20]] #vetor b
-
-m = len(A)
-n = len(c)
+'''''
 
 
-'''''''''
 
 
 
