@@ -28,18 +28,10 @@ def buidlingMatrixB(m, AB, A):
 def buildingInitialVectorX(n, XB, AB):
     ctrl = createMatrix(n)
 
-    #for z in range(n):
-    #    ctrl.append([0])
-
     counter = 0
-    for y in range(n):
-        for q in AB:
-            if (y+1 == q):
-                ctrl[y][0] = XB[counter][0]
-                counter = counter + 1
-                break
-            else:
-                ctrl[y][0] = 0
+    for q in AB:
+        ctrl[q-1][0] = XB[counter][0]
+        counter = counter + 1
     return ctrl
 
 def computingDVector(invB, A, IVNBCRN, AB, n):
