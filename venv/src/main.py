@@ -186,6 +186,30 @@ b = [[100],
      [40]] #vetor b
 '''''
 
+m = int(input('Entre com o número de restrições: '))
+n = int(input('Entre com o número de variáveis: '))
+
+A = []
+for line in range(m):
+    A.append([0]*n)
+
+for line in range(m):
+    for column in range(n):
+        A[line][column] = float(input('Entre com o valor de A no índice [{}][{}]: '.format(line, column)))
+
+c = []
+for o in range(n):
+    c.append([0])
+for o in range(n):
+    c[o][0] = float(input('Entre com o valor de c no índice [{}]: '.format(o)))
+
+b = []
+for o in range(m):
+    b.append([0])
+for o in range(m):
+    b[o][0] = float(input('Entre com o valor de b no índice [{}]: '.format(o)))
+
+'''''''''
 A = [[1.0, 2.0, 2.0, 1.0, 0.0, 0.0],
      [2.0, 1.0, 2.0, 0.0, 1.0, 0.0],
      [2.0, 2.0, 1.0, 0.0, 0.0, 1.0]]
@@ -199,9 +223,12 @@ c = [[-10],
 b = [[20],
      [20],
      [20]] #vetor b
+'''''
 
-m = len(A) #Número de restrições
-n = len(c) #Número de variáveis
+
+
+
+
 
 AB = computingAB(n, m)
 AB.sort()
